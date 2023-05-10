@@ -2,7 +2,8 @@ import numpy as N
 from sys import path
 
 def wavelength_to_rgb(wavelength, gamma=0.8):
-	''' taken from http://www.noah.org/wiki/Wavelength_to_RGB_in_Python
+	''' 
+	taken from http://www.noah.org/wiki/Wavelength_to_RGB_in_Python
 	This converts a given wavelength of light to an 
 	approximate RGB color value, for graphical purposes. The wavelength must be given
 	in nanometers in the range from 380 nm through 750 nm
@@ -71,7 +72,7 @@ def spectral_weights(wl, prop, spectrum):
 
 	weights_spectrum = q_data/N.trapz(wl_data, q_data)
 	# Interpolation to correclty evaluate the spectral weights if the data and the reference spectrum and the wl are not aligned.
-	weights_wl = N.interp(wl, wl_data, weights, left=0., right=0.)
+	weights_wl = N.interp(wl, wl_data, weights_spectrum, left=0., right=0.)
 	return weights_wl
 
 def solar_weighted_absorptance(wl, abso, solar_spectrum='/media/ael/Flashy/backup_05-06-2021/Documents/Boulot/Material_properties/astmg173.txt'):
@@ -84,7 +85,7 @@ def solar_weighted_absorptance(wl, abso, solar_spectrum='/media/ael/Flashy/backu
 	Returns:
 	- solar-weighted absorptance array and weights
 	'''
-	weights = spectral_weights(wl, solar_spectrum)
+	weights = spectral_weights(wl, abso, solar_spectrum)
 	return abso*weights, weights
 
 def solar_weighted_reflectance(wl, ref, solar_spectrum='/media/ael/Flashy/backup_05-06-2021/Documents/Boulot/Material_properties/astmg173.txt'):
@@ -97,7 +98,7 @@ def solar_weighted_reflectance(wl, ref, solar_spectrum='/media/ael/Flashy/backup
 	Returns:
 	- solar-weighted reflectance array and weights
 	'''
-	weights = spectral_weights(wl, solar_spectrum)
+	weights = spectral_weights(wl, ref, solar_spectrum)
 	return ref*weights, weights
 
 def planck_weights(wl, T):
