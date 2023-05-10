@@ -60,7 +60,7 @@ def wavelength_to_rgb(wavelength, gamma=0.8):
 	return (R,G,B,A)
 
 
-def spectral_weights(wl, prop, spectrum):
+def spectral_weights(wl, spectrum):
 	'''
 	Spectral weighting at wl locations property.
 	First the weights_spectrum distribution is established based on the reference spectrum, then the weighst are interpolated at the given wl locations.
@@ -69,10 +69,10 @@ def spectral_weights(wl, prop, spectrum):
 	data = N.loadtxt(spectrum)
 	wl_data = data[:,0]
 	q_data = data[:,1]
-
-	weights_spectrum = q_data/N.trapz(wl_data, q_data)
-	# Interpolation to correclty evaluate the spectral weights if the data and the reference spectrum and the wl are not aligned.
-	weights_wl = N.interp(wl, wl_data, weights_spectrum, left=0., right=0.)
+	# Normalise the spectrum
+	spectrum_PDF = q_data/N.trapz(q_data, wl_data)
+	# Interpolation to correctly evaluate the spectral weights if the data and the reference spectrum and the wl are not aligned.
+	weights_wl = N.interp(wl, wl_data, spectrum_PDF, left=0., right=0.)
 	return weights_wl
 
 def solar_weighted_absorptance(wl, abso, solar_spectrum='/media/ael/Flashy/backup_05-06-2021/Documents/Boulot/Material_properties/astmg173.txt'):
@@ -85,7 +85,7 @@ def solar_weighted_absorptance(wl, abso, solar_spectrum='/media/ael/Flashy/backu
 	Returns:
 	- solar-weighted absorptance array and weights
 	'''
-	weights = spectral_weights(wl, abso, solar_spectrum)
+	weights = spectral_weights(wl, solar_spectrum)
 	return abso*weights, weights
 
 def solar_weighted_reflectance(wl, ref, solar_spectrum='/media/ael/Flashy/backup_05-06-2021/Documents/Boulot/Material_properties/astmg173.txt'):
@@ -98,7 +98,7 @@ def solar_weighted_reflectance(wl, ref, solar_spectrum='/media/ael/Flashy/backup
 	Returns:
 	- solar-weighted reflectance array and weights
 	'''
-	weights = spectral_weights(wl, ref, solar_spectrum)
+	weights = spectral_weights(wl, solar_spectrum)
 	return ref*weights, weights
 
 def planck_weights(wl, T):
