@@ -105,7 +105,7 @@ def planck_weights(wl, T):
 	'''
 	Planck (blackbody) -weighted spectral radiative property. Directly use the Planck law to spectrally weight, no need to do any interpolation.
 	Arguments:
-	- wl: wavelengths in nm
+	- wl: wavelengths in m
 	- T: temperature in K
 	Returns:
 	- Planck-weighted property
