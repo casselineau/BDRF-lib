@@ -158,51 +158,7 @@ def format_data(sample_file, target=None):
 	N.savetxt(target, data, delimiter=',', header='theta (deg), phi (deg), sensor (uA)')
 	return target
 
-if __name__ == "__main__":
-	"""
-	Arguments:
-	sample_file target
 
-	When new data is added:
-	1 - Convert all the data into csv with the right content.
-	2 - Process the lamp data to get the integrated total signal.
-	2 - Calculate BDRF based on the full mesurement data including dark currents etc
- 	"""
-	from sys import argv
-
-	loc = argv[1]
-	#if len(argv)>3:
-	#	target = argv[3]
-	#else:
-	#	target = None
-
-	lamp_file, sample_files, dark_current_lamp_files, dark_current_sample_files = identify_all_data(loc)
-	'''
-	lamp_file = format_data(lamp_file)
-
-
-	dangs = N.pi/N.array([200, 300, 400, 500, 750, 1000, 1250, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000])
-	corrected_lamp_data = []
-	lamp_file = format_data(lamp_file)
-	for i,f in enumerate(dark_current_lamp_files):
-		dark_current_lamp_files[i] = format_data(f)
-	for dang in dangs:
-		print i
-		corrected_lamp_data.append(process_lamp(lamp_file, dark_current_lamp_files, dang))
-	print corrected_lamp_data
-	N.savetxt(path[0]+'/lamp_integration_test.csv', N.array([dangs, corrected_lamp_data]).T, delimiter=',', header='delta_ang (rad), integrated lamp signal (ua)')
-	
-	import matplotlib.pyplot as plt
-	dangs, corrected_lamp_data = N.loadtxt(path[0]+'/lamp_integration_test.csv', delimiter=',', skiprows=1).T
-	plt.figure()
-	plt.plot(dangs, corrected_lamp_data)
-	plt.xlabel(r'${\Delta\theta}$ (rad)')
-	plt.ylabel(r'Integrated lamp signal (uA)')
-	plt.savefig(path[0]+'/source_integration.png')
-	'''
-	source_power = N.loadtxt(path[0]+'/lamp_integration_test.csv', delimiter=',', skiprows=1).T[1,-1]
-	for i,f in enumerate(dark_current_sample_files):
-		dark_current_sample_files[i] = format_data(f)
 	for sample_file in sample_files:
 		sample_file = format_data(sample_file)
 		print 'processing', sample_file
